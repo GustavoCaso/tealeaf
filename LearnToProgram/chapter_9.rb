@@ -1,4 +1,4 @@
-#Roman numbers
+#Roman numbers first version Brandon help crack the code
 
 def roman_numbers num
   result = []
@@ -22,3 +22,23 @@ end
 
 
 puts roman_numbers 49
+
+#second version I decided to refactor it
+def roman_numbers_3 num
+  info = [["M", 1000],["D", 500],["C", 100],["L", 50],["X",10],["V", 5],["I", 1]]
+  result = []
+  number = num / 1000
+  result << "M" * number
+  info.each_with_index do |arr, i|
+    if i+1 <= 6
+      number = num % info[i][1] / info[i+1][1]
+      result << info[i+1][0] * number
+    end
+  end
+  return result.join('')
+end
+
+
+
+
+puts roman_numbers_3 46780
