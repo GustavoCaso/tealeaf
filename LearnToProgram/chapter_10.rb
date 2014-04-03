@@ -10,7 +10,7 @@
 
 
 def custom_sort (unsorted, sorted = [])
-  return sorted if unsorted.length == 0
+  return sorted.uniq if unsorted.length == 0
   smallest = unsorted[0]
   unsorted.each {|x| smallest = x if x <= smallest}
 
@@ -23,7 +23,18 @@ end
 arr = ["hello","bye","hate","ruby","tealeaf","achieve","skate","pain"]
 puts custom_sort(arr).inspect
 
-def dictionary_sort
+def dictionary_sort (unsorted, sorted = [])
+  return sorted.uniq if unsorted.length == 0
+  smallest = unsorted[0]
+  unsorted.each do |x|
+    smallest = x if x.downcase <= smallest.downcase
+  end
 
 
+  unsorted.each {|x| sorted << x if x.downcase <= smallest.downcase }
+  unsorted.delete(smallest)
+  custom_sort(unsorted, sorted)
 end
+
+arr2 = ["hello","bye","hate","ruby","Achieve","skate","pain","Tealeaf"]
+puts dictionary_sort(arr2).inspect
