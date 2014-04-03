@@ -17,12 +17,13 @@ def custom_sort (unsorted, sorted = [])
   unsorted.each {|x| sorted << x if x <= smallest }
 
   unsorted.delete(smallest)
-  custom_sort_3(unsorted, sorted)
+  custom_sort(unsorted, sorted)
 end
 
-arr = ["5","6","89","4","3","6","1","2"]
-puts custom_sort(arr)
+arr = ["hello","bye","hate","ruby","tealeaf","achieve","skate","pain"]
+puts custom_sort(arr).inspect
+
+def dictionary_sort
 
 
-
-
+end
