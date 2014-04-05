@@ -38,22 +38,26 @@ arr2 = ["hello","bye","hate","ruby","Achieve","skate","pain","Tealeaf"]
 puts dictionary_sort(arr2).inspect
 
 def custom_shuffle (unsorted, sorted = [])
-  return sorted if unsorted.length == 0
   random_numbers = []
   unsorted.each do |value|
-    rand = rand(unsorted.length + 1)
+    rand = rand(unsorted.length)
     if random_numbers.include? rand
+      puts "included value #{value}"
       custom_shuffle(unsorted, sorted)
     else
+      puts "#{value}"
       sorted[rand] = value
+      random_numbers << rand
+      unsorted.delete(value)
     end
-    unsorted.delete(value)
+
   end
-  custom_shuffle(unsorted, sorted)
-  random_numbers << rand
+  return  sorted
 end
 
-arr3 = [1,2,3,4,5,6,7,8]
+arr3 = [1,2,3,4,6,5,7,8]
 
 puts custom_shuffle(arr3).inspect
+
+
 
