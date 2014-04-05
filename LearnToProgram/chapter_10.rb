@@ -29,12 +29,31 @@ def dictionary_sort (unsorted, sorted = [])
   unsorted.each do |x|
     smallest = x if x.downcase <= smallest.downcase
   end
-
-
   unsorted.each {|x| sorted << x if x.downcase <= smallest.downcase }
   unsorted.delete(smallest)
-  custom_sort(unsorted, sorted)
+  dictionary_sort(unsorted, sorted)
 end
 
 arr2 = ["hello","bye","hate","ruby","Achieve","skate","pain","Tealeaf"]
 puts dictionary_sort(arr2).inspect
+
+def custom_shuffle (unsorted, sorted = [])
+  return sorted if unsorted.length == 0
+  random_numbers = []
+  unsorted.each do |value|
+    rand = rand(unsorted.length + 1)
+    if random_numbers.include? rand
+      custom_shuffle(unsorted, sorted)
+    else
+      sorted[rand] = value
+    end
+    unsorted.delete(value)
+  end
+  custom_shuffle(unsorted, sorted)
+  random_numbers << rand
+end
+
+arr3 = [1,2,3,4,5,6,7,8]
+
+puts custom_shuffle(arr3).inspect
+
