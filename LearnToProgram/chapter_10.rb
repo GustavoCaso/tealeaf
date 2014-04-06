@@ -23,6 +23,9 @@ end
 arr = ["hello","bye","hate","ruby","tealeaf","achieve","skate","pain"]
 puts custom_sort(arr).inspect
 
+
+
+
 def dictionary_sort (unsorted, sorted = [])
   return sorted.uniq if unsorted.length == 0
   smallest = unsorted[0]
@@ -37,20 +40,17 @@ end
 arr2 = ["hello","bye","hate","ruby","Achieve","skate","pain","Tealeaf"]
 puts dictionary_sort(arr2).inspect
 
-def custom_shuffle (unsorted, sorted = [])
-  random_numbers = []
-  unsorted.each do |value|
-    rand = rand(unsorted.length)
-    if random_numbers.include? rand
-      puts "included value #{value}"
-      custom_shuffle(unsorted, sorted)
-    else
-      puts "#{value}"
-      sorted[rand] = value
-      random_numbers << rand
-      unsorted.delete(value)
-    end
 
+
+def custom_shuffle (unsorted, sorted = [], random_numbers = [])
+  rand = rand(unsorted.length)
+  while random_numbers.length < unsorted.length
+    if random_numbers.include? rand
+      custom_shuffle(unsorted, sorted, random_numbers)
+    else
+      sorted << unsorted[rand]
+      random_numbers << rand
+    end
   end
   return  sorted
 end
@@ -58,6 +58,7 @@ end
 arr3 = [1,2,3,4,6,5,7,8]
 
 puts custom_shuffle(arr3).inspect
+
 
 
 
