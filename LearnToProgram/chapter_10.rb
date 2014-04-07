@@ -1,3 +1,4 @@
+require 'pry'
 #sort words
 #we have two arrays the first one is the one givebn by the user and the other is the one that hold the sorted words
 #every time we find a word is smallest we place it in the sorted array and deleted from the unshorted array
@@ -38,21 +39,7 @@ arr2 = ["hello","bye","hate","ruby","Achieve","skate","pain","Tealeaf"]
 puts dictionary_sort(arr2).inspect
 
 def custom_shuffle (unsorted, sorted = [])
-  random_numbers = []
-  unsorted.each do |value|
-    rand = rand(unsorted.length)
-    if random_numbers.include? rand
-      puts "included value #{value}"
-      custom_shuffle(unsorted, sorted)
-    else
-      puts "#{value}"
-      sorted[rand] = value
-      random_numbers << rand
-      unsorted.delete(value)
-    end
-
-  end
-  return  sorted
+  random = rand(unsorted.length)
 end
 
 arr3 = [1,2,3,4,6,5,7,8]
