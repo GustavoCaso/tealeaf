@@ -29,7 +29,7 @@ def roman_numbers_3 num
   result = []
   result << "M" * (num / 1000)
   info.each_with_index do |arr, i|
-    if i+1 <= 6
+    if arr != info.last
       number = num % info[i][1] / info[i+1][1]
       result << info[i+1][0] * number
     end
