@@ -24,7 +24,7 @@ end
 puts roman_numbers 49
 
 #second version I decided to refactor it
-def roman_numbers_3 num
+def roman_numbers_2 num
   info = [["M", 1000],["D", 500],["C", 100],["L", 50],["X",10],["V", 5],["I", 1]]
   result = []
   result << "M" * (num / 1000)
@@ -40,4 +40,4 @@ end
 
 
 
-puts roman_numbers_3 46780
+puts roman_numbers_2 46780

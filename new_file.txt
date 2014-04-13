@@ -1,0 +1,3 @@
+Writing from the File open method
+This is really fun
+I created an array from a file
