@@ -13,7 +13,6 @@ def create_deck
 end
 
 
-
 def shuffle_deck(arr)
   arr.sort_by{ rand }
 end
