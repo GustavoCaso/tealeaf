@@ -61,7 +61,6 @@ module Handable
     game = 0
 
     numbers = hand.map{|x| x[1]}
-    binding.pry
     numbers.each do |number|
       if number == "A"
         game += 11
@@ -78,19 +77,6 @@ module Handable
 
     game
   end
-
-
-  def evaluate_game(game)
-    if game == 21
-      puts "You have blackjack Congratulations you win"
-    elsif game > 21
-      puts "You have more than 21 you lose"
-    else
-      puts "You have #{game} what you want to do ? 1. for hit 2. for stay"
-      answer = gets.chomp
-    end
-  end
-
 end
 
 
@@ -156,6 +142,28 @@ class Blackjack
     @deck = Deck.new
   end
 
+  def evaluate_game(game)
+    if game == 21
+      puts "You have blackjack Congratulations you win"
+    elsif game > 21
+      puts "You have more than 21 you lose"
+    else
+      puts "You have #{game} what you want to do ? 1. for hit 2. for stay"
+      answer = gets.chomp
+      if answer == "1"
+        blackjack_hit(@player,@deck)
+      else
+        exit
+      end
+    end
+  end
+
+  def hit(player, deck)
+    player.hit(deck.deal)
+    game = player.evaluate_cards(player.hand)
+    evaluate_game(game)
+  end
+
   def run
     puts "Welcome to BlackJack OOP, lets keep it clean and enjoy the evening"
     puts "Welcome #{@player}"
@@ -165,8 +173,7 @@ class Blackjack
     @player.hit(@deck.deal)
     @dealer.hit(@deck.deal)
     game = @player.evaluate_cards(@player.hand)
-    binding.pry
-    @player.evaluate_game(game)
+    evaluate_game(game)
   end
 
 
