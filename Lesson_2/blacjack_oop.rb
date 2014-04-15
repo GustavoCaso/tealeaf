@@ -1,3 +1,5 @@
+require 'pry'
+
 # Lets Extraxt the nouns that are involved in a BlackJack game
 # 1. Extract nouns
 # 2. Think of behavior that noun could have
@@ -40,13 +42,16 @@
 
 EOF
 
+
+
 module Handable
 
-
+  attr_accessor :hand
 
   def hand
-    @hand ||= []
+   @hand ||= []
   end
+
 
   def hit(card)
     hand << card
@@ -56,7 +61,7 @@ module Handable
     game = 0
 
     numbers = hand.map{|x| x[1]}
-
+    binding.pry
     numbers.each do |number|
       if number == "A"
         game += 11
@@ -72,6 +77,18 @@ module Handable
     end
 
     game
+  end
+
+
+  def evaluate_game(game)
+    if game == 21
+      puts "You have blackjack Congratulations you win"
+    elsif game > 21
+      puts "You have more than 21 you lose"
+    else
+      puts "You have #{game} what you want to do ? 1. for hit 2. for stay"
+      answer = gets.chomp
+    end
   end
 
 end
@@ -102,22 +119,6 @@ class Dealer < Gamer
   end
 end
 
-class Card
-
-  attr_accessor :suit, :number
-
-  def initialize (suit, number)
-    @suit = suit
-    @number = number
-  end
-
-  def to_s
-    "#{suit} #{number}"
-  end
-
-end
-
-
 class Deck
 
   attr_accessor :cards
@@ -125,8 +126,8 @@ class Deck
   def initialize
     @cards = []
     ["H", "S", "C", "D"].each do |suit|
-      %w(2 3 4 5 6 7 8 9 10 J Q K A).each do |number|
-        @cards << Card.new(suit, number)
+      ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"].each do |number|
+        @cards << [suit,number]
       end
     end
     mix!
@@ -138,6 +139,10 @@ class Deck
 
   def deal
     cards.pop
+  end
+
+  def to_s
+    "#{@cards}"
   end
 
 end
@@ -154,18 +159,21 @@ class Blackjack
   def run
     puts "Welcome to BlackJack OOP, lets keep it clean and enjoy the evening"
     puts "Welcome #{@player}"
-
+    puts "So lets start"
+    @player.hit(@deck.deal)
+    @dealer.hit(@deck.deal)
+    @player.hit(@deck.deal)
+    @dealer.hit(@deck.deal)
+    game = @player.evaluate_cards(@player.hand)
+    binding.pry
+    @player.evaluate_game(game)
   end
 
 
 end
 
-
-p = Player.new("Gustavo")
-d = Deck.new
-p.hit(d.deal)
-
-
+game = Blackjack.new
+game.run
 
 
 
