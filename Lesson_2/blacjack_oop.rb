@@ -17,17 +17,11 @@ require 'pry'
 <<-EOF
   So we could say Card, Deck, Player, Dealer
   Clases:
-            Card:
-                  1. Can tell us what card is.
             Deck:
                   1. Can shuffle
                   2. Deal card
 
             Player < Gamer
-
-
-            Dealer < Gamer
-
 
 
   SuperClases:
@@ -38,7 +32,8 @@ require 'pry'
   Module
             Hand:
                   1.Store the hand of the player
-                  2.Evaluates cards and return value
+                  2.Add card to the hand
+                  3.Evaluates cards and return value
 
 EOF
 
@@ -53,7 +48,7 @@ module Handable
   end
 
 
-  def hit(card)
+  def add_card(card)
     hand << card
   end
 
@@ -99,12 +94,6 @@ class Player < Gamer
 end
 
 
-class Dealer < Gamer
-  def to_s
-    "Hey I'll be the dealer my name is #{name}"
-  end
-end
-
 class Deck
 
   attr_accessor :cards
@@ -127,10 +116,6 @@ class Deck
     cards.pop
   end
 
-  def to_s
-    "#{@cards}"
-  end
-
 end
 
 
@@ -151,15 +136,28 @@ class Blackjack
       puts "You have #{game} what you want to do ? 1. for hit 2. for stay"
       answer = gets.chomp
       if answer == "1"
-        blackjack_hit(@player,@deck)
+        hit(@player,@deck)
       else
-        exit
+        puts "Dealer turn"
+        dealer_turn
       end
     end
   end
 
+  def dealer_turn
+    dealer_game = @dealer.evaluate_cards(@dealer.hand)
+    if dealer_game < 17
+      @dealer.add_card(@deck.deal)
+      dealer_turn
+    elsif dealer_game > 21
+      puts "#{@dealer.name} lost this game dealer has #{dealer_game}"
+    elsif dealer_game == 21
+      puts "#{@dealer.name} made blackjack dealer wins"
+    end
+  end
+
   def hit(player, deck)
-    player.hit(deck.deal)
+    player.add_card(deck.deal)
     game = player.evaluate_cards(player.hand)
     evaluate_game(game)
   end
@@ -168,10 +166,10 @@ class Blackjack
     puts "Welcome to BlackJack OOP, lets keep it clean and enjoy the evening"
     puts "Welcome #{@player}"
     puts "So lets start"
-    @player.hit(@deck.deal)
-    @dealer.hit(@deck.deal)
-    @player.hit(@deck.deal)
-    @dealer.hit(@deck.deal)
+    @player.add_card(@deck.deal)
+    @dealer.add_card(@deck.deal)
+    @player.add_card(@deck.deal)
+    @dealer.add_card(@deck.deal)
     game = @player.evaluate_cards(@player.hand)
     evaluate_game(game)
   end
