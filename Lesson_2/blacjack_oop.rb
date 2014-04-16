@@ -8,7 +8,7 @@ require 'pry'
 ############################################################################
 # 1.The game start
 # 2. Create a deck and shuffle
-# 3. Ask for player name
+# 3. Ask for player name (*Optional)
 # 4. Deal cards (one to the player and one to the dealer)
 # 5. Evaluate cards and ask to hit or stay to the player
 # 6. Repeat step 5. until player lose, stop or hit blackjack
@@ -72,6 +72,7 @@ module Handable
 
     game
   end
+
 end
 
 
@@ -89,7 +90,7 @@ end
 
 class Player < Gamer
   def to_s
-    "Hey my name is #{name}"
+    "#{@name}"
   end
 end
 
@@ -123,20 +124,21 @@ class Blackjack
 
   def initialize
     @player = Player.new("Gustavo")
-    @dealer = Player.new("Dealer")
+    @dealer = Player.new("Christina")
     @deck = Deck.new
+    @player_game = 0
   end
 
   def evaluate_game(game)
     if game == 21
-      puts "You have blackjack Congratulations you win"
+      puts "You have blackjack Congratulations you win #{@player} nice hand by the way #{@player.hand}"
     elsif game > 21
-      puts "You have more than 21 you lose"
+      puts "You have more than 21 you lose #{@player} this are your cards #{@player.hand}"
     else
       puts "You have #{game} what you want to do ? 1. for hit 2. for stay"
       answer = gets.chomp
       if answer == "1"
-        hit(@player,@deck)
+        hit
       else
         puts "Dealer turn"
         dealer_turn
@@ -146,32 +148,35 @@ class Blackjack
 
   def dealer_turn
     dealer_game = @dealer.evaluate_cards(@dealer.hand)
-    if dealer_game < 17
+    if dealer_game < @player_game
       @dealer.add_card(@deck.deal)
       dealer_turn
+    elsif (dealer_game > @player_game || dealer_game == @player_game) && dealer_game < 21
+      puts "Delaer wins he/she has better hand than yours #{@dealer.hand}"
     elsif dealer_game > 21
-      puts "#{@dealer.name} lost this game dealer has #{dealer_game}"
+      puts "#{@dealer.name} lost this game dealer has #{dealer_game} and his cards where #{@dealer.hand}"
     elsif dealer_game == 21
-      puts "#{@dealer.name} made blackjack dealer wins"
+      puts "#{@dealer.name} made blackjack dealer wins and his cards where #{@dealer.hand}"
     end
   end
 
-  def hit(player, deck)
-    player.add_card(deck.deal)
-    game = player.evaluate_cards(player.hand)
-    evaluate_game(game)
+  def hit
+    @player.add_card(@deck.deal)
+    @player_game = @player.evaluate_cards(@player.hand)
+    evaluate_game(@player_game)
   end
 
   def run
     puts "Welcome to BlackJack OOP, lets keep it clean and enjoy the evening"
     puts "Welcome #{@player}"
     puts "So lets start"
+    puts "Dealing cards"
     @player.add_card(@deck.deal)
     @dealer.add_card(@deck.deal)
     @player.add_card(@deck.deal)
     @dealer.add_card(@deck.deal)
-    game = @player.evaluate_cards(@player.hand)
-    evaluate_game(game)
+    @player_game = @player.evaluate_cards(@player.hand)
+    evaluate_game(@player_game)
   end
 
 
