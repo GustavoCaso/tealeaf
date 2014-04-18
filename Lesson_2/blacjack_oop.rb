@@ -160,6 +160,15 @@ class Blackjack
     end
   end
 
+  def player_turn
+    @player.add_card(@deck.deal)
+    @dealer.add_card(@deck.deal)
+    @player.add_card(@deck.deal)
+    @dealer.add_card(@deck.deal)
+    @player_game = @player.evaluate_cards(@player.hand)
+    evaluate_game(@player_game)
+  end
+
   def hit
     @player.add_card(@deck.deal)
     @player_game = @player.evaluate_cards(@player.hand)
@@ -171,12 +180,7 @@ class Blackjack
     puts "Welcome #{@player}"
     puts "So lets start"
     puts "Dealing cards"
-    @player.add_card(@deck.deal)
-    @dealer.add_card(@deck.deal)
-    @player.add_card(@deck.deal)
-    @dealer.add_card(@deck.deal)
-    @player_game = @player.evaluate_cards(@player.hand)
-    evaluate_game(@player_game)
+    player_turn
   end
 
 
