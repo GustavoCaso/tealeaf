@@ -40,7 +40,7 @@ module Handable
     hand << card
   end
 
-  def evaluate_cards(hand)
+  def evaluate_cards
     game = 0
     numbers = hand.map{|x| x.number}
     numbers.each do |number|
@@ -61,9 +61,12 @@ module Handable
   end
 
   def show_hand
+    puts "The cards for the player are:"
     hand.each do |card|
-      puts "#{card}"
+      puts "=> #{card}"
     end
+
+    puts "=> Total: #{evaluate_cards}"
   end
 
 end
@@ -187,7 +190,7 @@ class Blackjack
   end
 
   def dealer_turn
-    dealer_game = dealer.evaluate_cards(dealer.hand)
+    dealer_game = dealer.evaluate_cards
     if dealer_game < player_game
       dealer.add_card(deck.deal)
       dealer_turn
@@ -204,7 +207,7 @@ class Blackjack
   end
 
   def player_turn
-    player_game = player.evaluate_cards(player.hand)
+    player_game = player.evaluate_cards
     evaluate_game(player_game)
   end
 
@@ -215,9 +218,14 @@ class Blackjack
     dealer.add_card(deck.deal)
   end
 
+  def show_hand
+    player.show_hand
+    dealer.show_hand
+  end
+
   def hit
     player.add_card(deck.deal)
-    player_game = player.evaluate_cards(player.hand)
+    player_game = player.evaluate_cards
     evaluate_game(player_game)
   end
 
@@ -233,6 +241,7 @@ class Blackjack
     puts "So lets start"
     puts "Dealing cards"
     deal_cards
+    show_hand
     player_turn
   end
 
