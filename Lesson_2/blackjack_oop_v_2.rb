@@ -76,11 +76,13 @@ class Player
 
   include Handable
 
-  attr_accessor :name, :hand
+  attr_accessor :name, :hand, :chips, :bet
 
   def initialize(name)
     @name = name
     @hand = []
+    @chips = 50
+    @bet = 0
   end
 
   def to_s
@@ -88,6 +90,22 @@ class Player
   end
 end
 
+class Dealer
+
+  include Handable
+
+  attr_accessor  :hand
+
+  def initialize
+    @hand = []
+  end
+
+  def show_hand
+    puts "The cards for the dealer are:"
+    puts "=> #{hand.last}"
+  end
+
+end
 
 class Card
 
@@ -112,8 +130,9 @@ class Card
               end
     ret_val
   end
-
 end
+
+
 
 class Deck
 
@@ -151,7 +170,7 @@ class Blackjack
 
   def initialize
     @player = Player.new("Gustavo")
-    @dealer = Player.new("Christina")
+    @dealer = Dealer.new
     @deck = Deck.new
     @player_game = 0
   end
@@ -159,10 +178,10 @@ class Blackjack
   def evaluate_game(hand)
     if hand == 21
       puts "You have blackjack Congratulations you win #{player} !!"
-      re_game
+      re_game("win")
     elsif hand > 21
       puts "You have more than 21 you lose #{player}. Sorry !!"
-      re_game
+      re_game("lose")
     else
       puts "You have #{hand} what you want to do ? 1. for hit 2. for stay"
       answer = gets.chomp
@@ -175,7 +194,16 @@ class Blackjack
     end
   end
 
-  def re_game
+  # Restart the game and deal with the bet if you win or lose
+
+  def re_game(status)
+
+    if status == "win"
+      puts "Congratulations for teh bet"
+      player.chips = player.bet * 2
+      puts "You have now #{player.chips} chips"
+    end
+
     puts "Would you like to play again ? 1.yes 2.no"
     if gets.chomp == "1"
       deck = Deck.new  # Reset Deck
@@ -196,13 +224,13 @@ class Blackjack
       dealer_turn
     elsif (dealer_game > player_game || dealer_game == player_game) && dealer_game < 21
       puts "Delaer wins he/she has better hand than yours"
-      re_game
+      re_game("lose")
     elsif dealer_game > 21
       puts "#{dealer.name} lost this game dealer has #{dealer_game}"
-      re_game
+      re_game("win")
     elsif dealer_game == 21
       puts "#{dealer.name} made blackjack dealer wins"
-      re_game
+      re_game("lose")
     end
   end
 
@@ -234,6 +262,26 @@ class Blackjack
     player.name = answer
   end
 
+
+  # set the bets and check if the player has no chips, if its 0 is not allow to play
+  def set_bets
+
+    if player.chips == 0
+      puts "I'm sorry you run out of chips, maybe next time"
+      exit
+    end
+
+    puts "#{player.name} you have a total of #{player.chips} chips"
+    puts "how many would you like to bet"
+    answer = gets.chomp.to_i
+    while answer < 0 || answer > player.chips
+      set_bets
+    end
+    player.chips -= answer
+    player.bet = answer
+
+  end
+
   def run
     puts "Welcome to BlackJack OOP, lets keep it clean and enjoy the evening"
     puts "Whats your name ?"
@@ -242,6 +290,7 @@ class Blackjack
     puts "Dealing cards"
     deal_cards
     show_hand
+    set_bets
     player_turn
   end
 
@@ -253,12 +302,6 @@ end
 game = Blackjack.new
 game.run
 
-# p = Player.new("Gustavo")
-# d = Deck.new
-# p.add_card(d.deal)
-# p.add_card(d.deal)
-
-# puts p.hand
 
 
 
