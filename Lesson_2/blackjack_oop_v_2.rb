@@ -14,15 +14,26 @@ require 'pry'
 # 6. Repeat step 5. until player lose, stop or hit blackjack
 # 7. Dealer turn
 # 8. Repeat step 6.
-<<-EOF
+=begin
   So we could say Card, Deck, Player, Dealer
   Clases:
+
+            Card:
+                  1. Save number and suit
+                  2. Tell which suit it is.
+
             Deck:
                   1. Can shuffle
                   2. Deal card
 
             Player
-                  include Hand
+                  include Hand  => has_a Hand
+                  1. store Hand
+                  2. store numbers of chips
+                  3. store bet
+
+            Dealer
+
 
   Module
             Hand:
@@ -30,7 +41,7 @@ require 'pry'
                   2.Add card to the hand
                   3.Evaluates cards and return value
 
-EOF
+=end
 
 
 
@@ -61,12 +72,17 @@ module Handable
   end
 
   def show_hand
-    puts "The cards for the player are:"
-    hand.each do |card|
-      puts "=> #{card}"
-    end
+    if self.class == Player
+      puts "The cards for the player are:"
+      hand.each do |card|
+        puts "=> #{card}"
+      end
 
-    puts "=> Total: #{evaluate_cards}"
+      puts "=> Total: #{evaluate_cards}"
+    else
+      puts "The last card for the dealer is:"
+      puts "=> #{hand.last}"
+    end
   end
 
 end
@@ -98,11 +114,6 @@ class Dealer
 
   def initialize
     @hand = []
-  end
-
-  def show_hand
-    puts "The cards for the dealer are:"
-    puts "=> #{hand.last}"
   end
 
 end
