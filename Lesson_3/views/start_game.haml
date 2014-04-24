@@ -1,2 +1,15 @@
-- session[:player_cards].each do |card|
-  %img{:src => "/images/cards/#{card.join('_')}.jpg", :alt => ""}/
+- images = show_cards(session[:player_cards])
+- images.each do |image|
+  %img{:src => "#{image}", :alt => ""}/
+%p
+  = session[:player]
+  has a total of
+  = session[:player_total]
+
+= game = evaluate_game(session[:player_total])
+
+- if game < 21
+  %form{:action => "/hit", method: "post"}
+    %input{:type => "submit", value: "HIT", class: "btn"}/
+  %form{:action => "/stay", method: "post"}
+    %input{:type => "submit", value: "STAY", class: "btn"}/
