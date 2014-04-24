@@ -54,13 +54,18 @@ helpers do
     total
   end
 
+  def hit
+    session[:player_cards] << add_card(session[:deck])
+    session[:player_total] = calculate_total(session[:player_cards])
+  end
+
   def evaluate_game(game)
     if game == 21
-      "The player has blackJack congratulations"
+      game
     elsif game > 21
-      "The player is busted with #{game}"
+      game
     else
-      "What would you like to do"
+      game
     end
   end
 
@@ -90,6 +95,15 @@ post '/start_game' do
   session[:player_cards] << add_card(session[:deck])
   session[:player_total] = calculate_total(session[:player_cards])
   haml :start_game
+end
+
+get '/start_game' do
+  haml :start_game
+end
+
+post '/hit' do
+  hit
+  redirect '/start_game'
 end
 
 

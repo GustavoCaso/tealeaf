@@ -6,9 +6,10 @@
   has a total of
   = session[:player_total]
 
-= game = evaluate_game(session[:player_total])
+- game = evaluate_game(session[:player_total])
 
 - if game < 21
+  %p What would you like to do?
   %form{:action => "/hit", method: "post"}
     %input{:type => "submit", value: "HIT", class: "btn"}/
   %form{:action => "/stay", method: "post"}
