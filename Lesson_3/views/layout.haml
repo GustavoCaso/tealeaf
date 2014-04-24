@@ -14,4 +14,6 @@
     .container
       - if flash[:error]
         .alert.alert-error= flash[:error]
+      - if flash[:success]
+        .alert.alert-info= flash[:success]
       = yield
