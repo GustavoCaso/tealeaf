@@ -71,6 +71,27 @@ helpers do
     session[:player_total] = calculate_total(session[:player_cards])
   end
 
+  def dealer_hit
+    session[:dealer_cards] << add_card(session[:deck])
+    session[:dealer_total] = calculate_total(session[:dealer_cards])
+  end
+
+  def check_dealer_total
+    if session[:dealer_total] == session[:player_total]
+      flash[:error] = "Sorry the dealer has the same game so you lose"
+      haml '/start_game'
+    elsif session[:dealer_total] < 17
+      @dealer_hit = true
+      haml :start_game
+    elsif session[:dealer_total] == 21
+      flash[:error] = "Sorry dealer has Blackjack sorry #{session[:player]} you lose"
+      haml '/start_game'
+    else
+      flash[:success] = "Dealer busted that means #{session[:player]} wins"
+      haml '/start_game'
+    end
+  end
+
 
 end
 
@@ -94,9 +115,9 @@ get '/new_game' do
 end
 
 post '/start_game' do
+  session[:dealer_turn] = false
   session[:bet] = params[:bet]
   start_game
-  binding.pry
   haml :start_game
 end
 
@@ -107,7 +128,7 @@ end
 post '/hit' do
   hit
   if session[:player_total] == 21
-    flash[:success  ] = "Congratulations #{session[:player]} you hit 21 BlackJack"
+    flash[:success] = "Congratulations #{session[:player]} you hit 21 BlackJack"
     redirect '/start_game'
   elsif session[:player_total] > 21
     flash[:error] = "Sorry #{session[:player]} you busted with #{session[:player_total]}"
@@ -123,20 +144,13 @@ end
 
 
 post '/stay' do
-  @dealer_turn = true
-  if session[:dealer_total] == session[:player_total]
-    flash[:error] = "Sorry the dealer has the same game so you lose"
-    redirect '/start_game'
-  elsif session[:dealer_total] < 17
-    @dealer_hit = true
-    redirect '/start_game'
-  elsif session[:dealer_total] == 21
-    flash[:error] = "Sorry dealer has Blackjack soory #{session[:player]} you lose"
-    redirect '/start_game'
-  else
-    flash[:success] = "Dealer busted that means #{session[:player]} wins"
-    redirect '/start_game'
-  end
+  session[:dealer_turn] = true
+  check_dealer_total
+end
+
+get '/dealer_hit' do
+  dealer_hit
+  check_dealer_total
 end
 
 get '/game_over' do

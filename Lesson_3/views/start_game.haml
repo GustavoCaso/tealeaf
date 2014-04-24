@@ -12,7 +12,7 @@
   %img{:src => "#{image}", :alt => ""}/
 
 
-- if session[:player_total] < 21 && @dealer_turn  == false
+- if session[:player_total] < 21 && session[:dealer_turn] == false
   %h3
     = session[:player]
     has a total of
