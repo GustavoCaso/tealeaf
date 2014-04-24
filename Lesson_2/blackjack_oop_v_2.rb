@@ -312,7 +312,3 @@ end
 
 game = Blackjack.new
 game.run
-
-
-
-

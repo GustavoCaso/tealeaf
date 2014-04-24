@@ -1,0 +1,17 @@
+!!!
+%html
+  %head
+    %title My First App
+    %link{href: "/vendor/bootstrap/css/bootstrap.min.css", rel: "stylesheet"}/
+    %link{href: "/application.css", rel: "stylesheet"}/
+  %body{style: "padding-top: 50px;"}
+    .navbar.navbar-fixed-top
+      .navbar-inner
+        .container
+          %ul.nav
+            %li
+              %a{href: "/"} Go Back
+    .container
+      - if flash[:error]
+        .alert.alert-error= flash[:error]
+      = yield
