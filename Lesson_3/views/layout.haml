@@ -12,8 +12,8 @@
             %li
               %a{href: "/"} Go Back
     .container
-      - if flash[:error]
-        .alert.alert-error= flash[:error]
-      - if flash[:success]
-        .alert.alert-info= flash[:success]
+      - if @error
+        .alert.alert-error= @error
+      - if @success
+        .alert.alert-info= @success
       = yield

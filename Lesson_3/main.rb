@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'sinatra'
-require 'sinatra/flash'
 require 'pry'
 
 set :sessions, true
@@ -11,11 +10,14 @@ helpers do
     Rack::Utils.escape_html(text)
   end
 
-  def show_cards(cards)
+  def show_cards(cards, cover = true)
     url = []
     cards.each do |card|
       image_name = card.join('_')
       url << "images/cards/#{image_name}.jpg"
+    end
+    unless cover
+      url[0] = "images/cards/cover.jpg"
     end
     url
   end
@@ -76,19 +78,31 @@ helpers do
     session[:dealer_total] = calculate_total(session[:dealer_cards])
   end
 
+  def check_player_total
+    if session[:player_total] == 21
+      @success = "Congratulations #{session[:player]} you hit 21 BlackJack"
+      haml :start_game
+    elsif session[:player_total] > 21
+      @error = "Sorry #{session[:player]} you busted with #{session[:player_total]}"
+      haml :start_game
+    else
+      haml :start_game
+    end
+  end
+
   def check_dealer_total
     if session[:dealer_total] == session[:player_total]
-      flash[:error] = "Sorry the dealer has the same game so you lose"
-      haml '/start_game'
+      @error = "Sorry its a tie , that means Dealer wins"
+      haml :start_game
     elsif session[:dealer_total] < 17
       @dealer_hit = true
       haml :start_game
     elsif session[:dealer_total] == 21
-      flash[:error] = "Sorry dealer has Blackjack sorry #{session[:player]} you lose"
-      haml '/start_game'
-    else
-      flash[:success] = "Dealer busted that means #{session[:player]} wins"
-      haml '/start_game'
+      @error = "Sorry dealer has Blackjack sorry #{session[:player]} you lose"
+      haml :start_game
+    elsif session[:dealer_total] > 21
+      @success = "Dealer busted that means with #{session[:dealer_total]}, #{session[:player]} wins"
+      haml :start_game
     end
   end
 
@@ -103,8 +117,8 @@ post '/new_game' do
   session[:player] = params[:name]
 
   if session[:player].empty?
-    flash[:error] = "You must tell use your name !!!"
-    redirect "/"
+    @error = "You must tell use your name !!!"
+    haml :index
   else
     haml :bet
   end
@@ -118,24 +132,12 @@ post '/start_game' do
   session[:dealer_turn] = false
   session[:bet] = params[:bet]
   start_game
-  haml :start_game
-end
-
-get '/start_game' do
-  haml :start_game
+  check_player_total
 end
 
 post '/hit' do
   hit
-  if session[:player_total] == 21
-    flash[:success] = "Congratulations #{session[:player]} you hit 21 BlackJack"
-    redirect '/start_game'
-  elsif session[:player_total] > 21
-    flash[:error] = "Sorry #{session[:player]} you busted with #{session[:player_total]}"
-    redirect '/start_game'
-  else
-    redirect '/start_game'
-  end
+  check_player_total
 end
 
 get '/bet' do
