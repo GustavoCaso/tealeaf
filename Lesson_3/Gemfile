@@ -7,4 +7,4 @@ gem 'haml-rails'
 gem 'sass-rails'
 gem 'shotgun'
 gem 'pry'
-gem 'sinatra-flash'
+

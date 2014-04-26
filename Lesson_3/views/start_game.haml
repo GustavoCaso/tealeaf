@@ -1,9 +1,14 @@
 %h1 Dealer cards
-- dealer_images = show_cards(session[:dealer_cards])
+- dealer_images = show_cards(session[:dealer_cards], session[:dealer_turn])
 - dealer_images.each do |image|
   %img{:src => "#{image}", :alt => ""}/
+- if session[:dealer_turn]
+  %h3
+    Dealer has
+    = session[:dealer_total]
 - if @dealer_hit
-  %a{:href => "/dealer_hit", class: "btn"} Dealer Hit
+  %p
+    %a{:href => "/dealer_hit", class: "btn"} Dealer Hit
 %h1
   = session[:player]
   cards
@@ -12,7 +17,7 @@
   %img{:src => "#{image}", :alt => ""}/
 
 
-- if session[:player_total] < 21 && session[:dealer_turn] == false
+- if session[:dealer_turn] == false && session[:player_total] < 21
   %h3
     = session[:player]
     has a total of
