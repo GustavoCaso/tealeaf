@@ -1,0 +1,73 @@
+.clearfix:after {
+     visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+     }
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* close commented backslash hack */
+
+body{
+  background: green;
+  color: white;
+}
+
+.forms{
+  text-align: center;
+}
+
+.dealer_cards, .player_cards{
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+.player_cards h1{
+  display: inline-block;
+}
+
+.player_cards .cards{
+  margin-top: 40px;
+}
+
+.player_cards .avatar{
+  border-radius: 5px
+}
+
+.card{
+  width: 100px;
+  border-radius: 10px;
+}
+
+.actions, .new_game{
+  text-align: center;
+  background: rgba(88,88,88,1);
+  border-radius: 5px;
+  margin-bottom: 20px;
+  border: 4px solid #CFCDCD;
+  padding: 5px;
+}
+
+.new_game{
+  width: 200px;
+}
+
+.actions h3 span{
+  font-size: 10px
+}
+
+.actions .buttons {
+  width: 150px;
+  margin: 0 auto;
+}
+
+.actions .buttons form{
+  float: left;
+  margin-right: 10px;
+}
+
+

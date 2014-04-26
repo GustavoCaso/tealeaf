@@ -6,6 +6,11 @@ set :sessions, true
 
 helpers do
 
+  def avatar_url(email)
+     gravatar_id = Digest::MD5::hexdigest(email).downcase
+    "http://gravatar.com/avatar/#{gravatar_id}.png"
+  end
+
   def h(text)
     Rack::Utils.escape_html(text)
   end
@@ -54,7 +59,7 @@ helpers do
       if n == "ace"
         total += 11
       else
-        n.to_1 == 0 ? total += 10 : total += n.to_i
+        n.to_i == 0 ? total += 10 : total += n.to_i
       end
     end
 
@@ -77,9 +82,13 @@ helpers do
   def check_player_total
     if session[:player_total] == 21
       @success = "Congratulations #{session[:player]} you hit 21 BlackJack"
+      @new_game = true
+      session[:total_money] += session[:bet]
       haml :start_game
     elsif session[:player_total] > 21
       @error = "Sorry #{session[:player]} you busted with #{session[:player_total]}"
+      @new_game = true
+      session[:total_money] -= session[:bet]
       haml :start_game
     else
       haml :start_game
@@ -89,15 +98,21 @@ helpers do
   def check_dealer_total
     if session[:dealer_total] == session[:player_total]
       @error = "Sorry its a tie , that means Dealer wins"
+      @new_game = true
+      session[:total_money] -= session[:bet]
       haml :start_game
     elsif session[:dealer_total] < 17
       @dealer_hit = true
       haml :start_game
     elsif session[:dealer_total] == 21
       @error = "Sorry dealer has Blackjack sorry #{session[:player]} you lose"
+      @new_game = true
+      session[:total_money] -= session[:bet]
       haml :start_game
     elsif session[:dealer_total] > 21
-      @success = "Dealer busted that means with #{session[:dealer_total]}, #{session[:player]} wins"
+      @success = "Dealer busted with #{session[:dealer_total]}, that means  #{session[:player]} wins"
+      @new_game = true
+      session[:total_money] += session[:bet]
       haml :start_game
     end
   end
@@ -106,12 +121,13 @@ helpers do
 end
 
 get '/' do
+  session[:total_money] = 500
   haml :index
 end
 
 post '/new_game' do
   session[:player] = params[:name]
-
+  session[:email] = params[:email]
   if session[:player].empty?
     @error = "You must tell use your name !!!"
     haml :index
@@ -126,7 +142,7 @@ end
 
 post '/start_game' do
   session[:dealer_turn] = false
-  session[:bet] = params[:bet]
+  session[:bet] = params[:bet].to_i
   start_game
   check_player_total
 end
