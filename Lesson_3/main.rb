@@ -45,18 +45,14 @@ helpers do
 
   def calculate_total(cards)
     total = 0
-    number = []
-    cards.each do |card|
-      number << card[1]
-    end
+
+    number = cards.map{|card| card[1]}
 
     number.each do |n|
       if n == "ace"
         total += 11
-      elsif n.to_i == 0
-        total += 10
       else
-        total += n.to_i
+        n.to_1 == 0 ? total += 10 : total += n.to_i
       end
     end
 
