@@ -7,33 +7,24 @@
 
 .dealer_cards
   %h1 Dealer cards
-  - dealer_images = show_cards(session[:dealer_cards], session[:dealer_turn])
-  - dealer_images.each do |image|
-    %img{:src => "#{image}", :alt => "", class: "card"}/
+  - show_cards(session[:dealer_cards], session[:dealer_turn]).each do |card|
+    %img{:src => "#{card}", :alt => "", class: "card"}/
   - if session[:dealer_turn]
-    %h3
-      Dealer has
-      = session[:dealer_total]
+    %h3== Dealer has #{session[:dealer_total]}
   - if @dealer_hit
     %p
       %a{:href => "/dealer_hit", class: "btn"} Dealer Hit
 .player_cards
-  %img{:src => "#{avatar_url(session[:email])}", :alt => "", class: "avatar"}/
-  %h1
-    = session[:player]
-    cards
+  %h1== #{session[:player]} cards
   .cards
-    - images = show_cards(session[:player_cards])
-    - images.each do |image|
-      %img{:src => "#{image}", :alt => "", class: "card"}/
+    - show_cards(session[:player_cards]).each do |card|
+      %img{:src => "#{card}", :alt => "", class: "card"}/
 
 
 - if session[:dealer_turn] == false && session[:player_total] < 21
   .actions.clearfix
     %h3
-      = session[:player]
-      has a total of
-      = session[:player_total]
+      == #{session[:player]} has a total of #{session[:player_total]}
       %span What would you like to do?
     .buttons
       %form{:action => "/hit", method: "post"}

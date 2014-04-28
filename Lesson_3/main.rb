@@ -4,27 +4,15 @@ require 'pry'
 
 set :sessions, true
 
+BLACKJACK_AMOUNT = 21
+DEALER_MIN_HIT = 17
+
 helpers do
-
-  def avatar_url(email)
-     gravatar_id = Digest::MD5::hexdigest(email).downcase
-    "http://gravatar.com/avatar/#{gravatar_id}.png"
-  end
-
-  def h(text)
-    Rack::Utils.escape_html(text)
-  end
-
   def show_cards(cards, cover = true)
-    url = []
-    cards.each do |card|
-      image_name = card.join('_')
-      url << "images/cards/#{image_name}.jpg"
-    end
-    unless cover
-      url[0] = "images/cards/cover.jpg"
-    end
-    url
+    src = []
+    cards.each { |card| src << "images/cards/#{card.join('_')}.jpg" }
+    src[0] = "images/cards/cover.jpg" unless cover
+    src
   end
 
   def create_deck
@@ -52,7 +40,6 @@ helpers do
 
   def calculate_total(cards)
     total = 0
-
     number = cards.map{|card| card[1]}
 
     number.each do |n|
@@ -64,7 +51,7 @@ helpers do
     end
 
     number.select{ |n| n == "ace"}.count.times do
-      total -= 10 if total > 21
+      total -= 10 if total > BLACKJACK_AMOUNT
     end
     total
   end
@@ -79,16 +66,25 @@ helpers do
     session[:dealer_total] = calculate_total(session[:dealer_cards])
   end
 
+  def winner!(msg)
+    @new_game = true
+    session[:total_money] += session[:bet]
+    @success = "#{msg}"
+  end
+
+  def loses!(msg)
+    @new_game = true
+    session[:total_money] -= session[:bet]
+    @error = "#{msg}"
+  end
+
+
   def check_player_total
-    if session[:player_total] == 21
-      @success = "Congratulations #{session[:player]} you hit 21 BlackJack"
-      @new_game = true
-      session[:total_money] += session[:bet]
+    if session[:player_total] == BLACKJACK_AMOUNT
+      winner!("Congratulations #{session[:player]} you hit 21 BlackJack")
       haml :start_game
-    elsif session[:player_total] > 21
-      @error = "Sorry #{session[:player]} you busted with #{session[:player_total]}"
-      @new_game = true
-      session[:total_money] -= session[:bet]
+    elsif session[:player_total] > BLACKJACK_AMOUNT
+      loses!("Sorry #{session[:player]} you busted with #{session[:player_total]}")
       haml :start_game
     else
       haml :start_game
@@ -97,28 +93,24 @@ helpers do
 
   def check_dealer_total
     if session[:dealer_total] == session[:player_total]
-      @error = "Sorry its a tie , that means Dealer wins"
-      @new_game = true
-      session[:total_money] -= session[:bet]
+      loses!("Sorry its a tie , that means Dealer wins")
       haml :start_game
-    elsif session[:dealer_total] < 17
+    elsif session[:dealer_total] < DEALER_MIN_HIT
       @dealer_hit = true
       haml :start_game
-    elsif session[:dealer_total] == 21
-      @error = "Sorry dealer has Blackjack sorry #{session[:player]} you lose"
-      @new_game = true
-      session[:total_money] -= session[:bet]
+    elsif session[:dealer_total] == BLACKJACK_AMOUNT
+      loses!("Sorry dealer has Blackjack sorry #{session[:player]} you lose")
       haml :start_game
-    elsif session[:dealer_total] > 21
-      @success = "Dealer busted with #{session[:dealer_total]}, that means  #{session[:player]} wins"
-      @new_game = true
-      session[:total_money] += session[:bet]
+    elsif session[:dealer_total] > BLACKJACK_AMOUNT
+      winner!("Dealer busted with #{session[:dealer_total]}, that means  #{session[:player]} wins")
       haml :start_game
     end
   end
 
 
 end
+
+#ROUTES
 
 get '/' do
   session[:total_money] = 500
@@ -127,7 +119,6 @@ end
 
 post '/new_game' do
   session[:player] = params[:name]
-  session[:email] = params[:email]
   if session[:player].empty?
     @error = "You must tell use your name !!!"
     haml :index
