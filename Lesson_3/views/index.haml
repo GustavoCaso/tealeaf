@@ -1,8 +1,8 @@
-.forms
-  %p Welcome to the Online Casino play.
-  %p First will like to know your name that way we know how we are stealing
+.forms.start_game
+  %p.left Welcome to the Online Casino play.
+  %p.right First will like to know your name that way we know how we are stealing
   %form{:action => "/new_game", method: "post"}
     %span Name:
     %input{:type => "text", name: "name"}/
     %br/
-    %input{:type => "submit", value: "Send", class: "btn"}/
+    %input{:type => "submit", value: "SEND", class: "btn"}/

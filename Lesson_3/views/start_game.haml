@@ -1,33 +1,34 @@
--if @new_game
-  .new_game
-    %p Would you like to play again
-    .buttons
-      %a{:href => "/bet",class: "btn"} YES
-      %a{:href => "/game_over",class: "btn"} NO
+.game
+  -if @new_game
+    .new_game
+      %p Would you like to play again
+      .buttons
+        %a{:href => "/bet",class: "btn"} YES
+        %a{:href => "/game_over",class: "btn"} NO
 
-.dealer_cards
-  %h1 Dealer cards
-  - show_cards(session[:dealer_cards], session[:dealer_turn]).each do |card|
-    %img{:src => "#{card}", :alt => "", class: "card"}/
-  - if session[:dealer_turn]
-    %h3== Dealer has #{session[:dealer_total]}
-  - if @dealer_hit
-    %p
-      %a{:href => "/dealer_hit", class: "btn"} Dealer Hit
-.player_cards
-  %h1== #{session[:player]} cards
-  .cards
-    - show_cards(session[:player_cards]).each do |card|
+  .dealer_cards
+    %h1 Dealer cards
+    - show_cards(session[:dealer_cards], session[:dealer_turn]).each do |card|
       %img{:src => "#{card}", :alt => "", class: "card"}/
+    - if session[:dealer_turn]
+      %h3== Dealer has #{session[:dealer_total]}
+    - if @dealer_hit
+      %p
+        %a{:href => "/dealer_hit", class: "btn dealer_hit"} Dealer Hit
+  .player_cards
+    %h1== #{session[:player]} cards
+    .cards
+      - show_cards(session[:player_cards]).each do |card|
+        %img{:src => "#{card}", :alt => "", class: "card"}/
 
 
-- if session[:dealer_turn] == false && session[:player_total] < 21
-  .actions.clearfix
-    %h3
-      == #{session[:player]} has a total of #{session[:player_total]}
-      %span What would you like to do?
-    .buttons
-      %form{:action => "/hit", method: "post"}
-        %input{:type => "submit", value: "HIT", class: "btn"}/
-      %form{:action => "/stay", method: "post"}
-        %input{:type => "submit", value: "STAY", class: "btn"}/
+  - if session[:dealer_turn] == false && session[:player_total] < 21
+    .actions.clearfix
+      %h3
+        == #{session[:player]} has a total of #{session[:player_total]}
+        %span What would you like to do?
+      .buttons
+        %form{:action => "/hit", method: "post", class: "hit_form"}
+          %input{:type => "submit", value: "HIT", class: "btn"}/
+        %form{:action => "/stay", method: "post", class: "stay_form"}
+          %input{:type => "submit", value: "STAY", class: "btn"}/
