@@ -4,6 +4,8 @@ $(document).ready(function(){
 
   $('.right').animate({left: 0},1500, "linear");
 
+
+
   $('.buttons').on('click', '.hit_form', function(e){
     $.ajax({
       url: '/hit',

@@ -51,7 +51,7 @@ input{
   text-align: center;
 }
 
-.forms.start_game{
+.forms.start_game, .forms.bet{
   position: absolute;
   width: 600px;
   height: 200px;
@@ -70,6 +70,69 @@ input{
 .right{
   position: relative;
   left: 900px;
+}
+
+.hearts,.spades{
+  -webkit-transition: all 3s;
+  -moz-transition: all 3s;
+  -ms-transition: all 3s;
+  -o-transition: all 3s;
+  transition: all 3s;
+  position: relative;
+  left: 282px;
+}
+
+ .clubs, .diamonds{
+  -webkit-transition: all 3s;
+  -moz-transition: all 3s;
+  -ms-transition: all 3s;
+  -o-transition: all 3s;
+  transition: all 3s;
+  position: relative;
+  right: 400px;
+}
+
+.start_game form input[type=text]:focus ~ .hearts{
+  left: 182px;
+  -webkit-transform: rotate(-360deg);
+  -moz-transform: rotate(-360deg);
+  -ms-transform: rotate(-360deg);
+  -o-transform: rotate(-360deg);
+  transform: rotate(-360deg);
+}
+
+.start_game form input[type=text]:focus ~ .spades{
+  left: 182px;
+  -webkit-transform: rotate(-360deg);
+  -moz-transform: rotate(-360deg);
+  -ms-transform: rotate(-360deg);
+  -o-transform: rotate(-360deg);
+  transform: rotate(-360deg);
+}
+
+.start_game form input[type=text]:focus ~ .clubs{
+  right: 287px;
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  transform: rotate(360deg);
+}
+
+.start_game form input[type=text]:focus ~ .diamonds{
+  right: 287px;
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  transform: rotate(360deg);
+}
+
+.start_game form input[type=submit]{
+  margin-left: 21px;
+  position: relative;
+  top: 87px;
+  left: 169px;
 }
 
 .dealer_cards, .player_cards{
