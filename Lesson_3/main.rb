@@ -92,19 +92,27 @@ helpers do
   end
 
   def check_dealer_total
-    if session[:dealer_total] == session[:player_total]
-      loses!("Sorry its a tie , that means Dealer wins")
-      haml :start_game
-    elsif session[:dealer_total] < DEALER_MIN_HIT
-      @dealer_hit = true
-      haml :start_game
-    elsif session[:dealer_total] == BLACKJACK_AMOUNT
+    if session[:dealer_total] == BLACKJACK_AMOUNT
       loses!("Sorry dealer has Blackjack sorry #{session[:player]} you lose")
-      haml :start_game
     elsif session[:dealer_total] > BLACKJACK_AMOUNT
       winner!("Dealer busted with #{session[:dealer_total]}, that means  #{session[:player]} wins")
-      haml :start_game
+    elsif session[:dealer_total] >= DEALER_MIN_HIT
+      compare_games
+    else
+      @dealer_hit = true
     end
+    haml :start_game
+  end
+
+  def compare_games
+    if session[:dealer_total] > session[:player_total]
+      loses!("Sorry dealer has #{session[:dealer_total]} is higher than your hand, sorry #{session[:player]} you lose")
+    elsif session[:dealer_total] == session[:player_total]
+      winner!("Its a tie but in this game a tie means you win")
+    else
+      winner!("You win Congratulations")
+    end
+    haml :start_game
   end
 
 
