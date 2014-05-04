@@ -6,6 +6,7 @@ set :sessions, true
 
 BLACKJACK_AMOUNT = 21
 DEALER_MIN_HIT = 17
+INITIAL_BET = 500
 
 helpers do
   def show_cards(cards, cover = true)
@@ -121,7 +122,7 @@ end
 #ROUTES
 
 get '/' do
-  session[:total_money] = 500
+  session[:total_money] = INITIAL_BET
   haml :index
 end
 
@@ -141,9 +142,14 @@ end
 
 post '/start_game' do
   session[:dealer_turn] = false
-  session[:bet] = params[:bet].to_i
-  start_game
-  check_player_total
+  if params[:bet].to_i > session[:total_money] || params[:bet].to_i < 1
+    @error = "You must introduce a valid bet !!!"
+    haml :bet
+  else
+    session[:bet] = params[:bet].to_i
+    start_game
+    check_player_total
+  end
 end
 
 post '/hit' do
@@ -169,5 +175,6 @@ end
 get '/game_over' do
   haml :game_over
 end
+
 
 

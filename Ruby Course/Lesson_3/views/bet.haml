@@ -1,0 +1,20 @@
+.forms.bet
+  -if session[:total_money] == 0
+    %p I'm so sorry you don't have any chips
+    %p But if you really want to play just click the link
+    %a{:href => "/", class: "btn"} Start Over
+  -else
+    %p
+      Welcome
+      = session[:player]
+
+    %p This is the place where you decide how much money do you bet
+    %form{:action => "/start_game", method: 'post'}
+      %span Bet:
+      %input{:type => "text", name: "bet"}/
+      %br/
+      %input{:type => "submit", value: "Start", class: "btn"}/
+    %p
+      You have
+      = session[:total_money]
+      €
